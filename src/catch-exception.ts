@@ -2,7 +2,7 @@
  * @Author: Coooookies admin@mitay.net
  * @Date: 2022-09-03 01:21:43
  * @LastEditors: Coooookies admin@mitay.net
- * @LastEditTime: 2022-09-04 04:25:06
+ * @LastEditTime: 2022-09-06 00:56:33
  * @FilePath: \server_szpt\src\catch-exception.ts
  * @Description:
  */
@@ -24,7 +24,7 @@ export const catch_exception = {
 
     logger.error(body);
 
-    if (bark_key !== "") {
+    if (!!bark_key) {
       bark.send(bark_key, {
         ...bark_global_template,
         title: `自动健康申报 - 异常`,
@@ -45,7 +45,7 @@ export const catch_exception = {
 
     logger.error(body);
 
-    if (bark_key !== "") {
+    if (!!bark_key) {
       bark.send(bark_key, {
         ...bark_global_template,
         title: `自动健康申报 - 异常`,
@@ -66,7 +66,7 @@ export const catch_exception = {
 
     logger.error(body);
 
-    if (bark_key !== "") {
+    if (!!bark_key) {
       bark.send(bark_key, {
         ...bark_global_template,
         title: `自动健康申报 - 异常`,
@@ -87,7 +87,7 @@ export const catch_exception = {
 
     logger.warn(body);
 
-    if (bark_key !== "" && !undisturb) {
+    if (!!bark_key && !undisturb) {
       bark.send(bark_key, {
         ...bark_global_template,
         title: `自动健康申报 - 重复`,
@@ -113,7 +113,7 @@ export const catch_exception = {
 
     logger.info(body);
 
-    if (bark_key !== "") {
+    if (!!bark_key) {
       bark.send(bark_key, {
         ...bark_global_template,
         title: `自动健康申报 - 成功`,
@@ -134,7 +134,7 @@ export const catch_exception = {
 
     logger.error(body);
 
-    if (bark_key !== "") {
+    if (!!bark_key) {
       bark.send(bark_key, {
         ...bark_global_template,
         title: `自动健康申报 - 异常`,
