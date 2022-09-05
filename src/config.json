@@ -1,0 +1,20 @@
+{
+  "day_report": {
+    "upload_time": "00:05:00"
+  },
+  "bark_server": {
+    "host": "YOUR_BARK_SERVER_HOST",
+    "protocol": "http"
+  },
+  "accounts": [
+    {
+      "name": "PROFILE_NAME",
+      "userid": "YOUR_STUDENT_ID",
+      "password": "YOUR_STUDENT_ACCOUNT_PASSWORD",
+      "option": {
+        "bark_key": "YOUR_PHONE_BARK_KEY",
+        "update_virus_check_time": true
+      }
+    }
+  ]
+}
