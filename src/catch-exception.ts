@@ -6,37 +6,40 @@
  * @FilePath: \server_szpt\src\catch-exception.ts
  * @Description:
  */
-import config from "./config.json";
 import { logger } from "./logger";
-import { BarkConnector } from "./bark";
 import dayjs from "dayjs";
+import { NotifierFactory, NotifierOption } from "./notifier";
 
-const bark = new BarkConnector(config.bark_server);
-const bark_global_template = {
-  icon: "https://s1.ax1x.com/2022/09/02/vIPkXd.png",
-  group: "com.mitay.szptdayreport",
-};
+function send(title: string, body: string, notification: NotifierOption) {
+  const connector = NotifierFactory.create(notification);
+  const token = notification.option.token;
+  const extra = notification.option.extra;
+  connector.send({
+    title,
+    body,
+    token,
+    ...extra
+  });
+}
 
 export const catch_exception = {
-  login(name: string, userid: string, bark_key: string, error: string) {
+  login(name: string, userid: string, notification: NotifierOption, error: string) {
     const time = dayjs().format("YYYY-MM-DD HH:mm:ss");
     const body = `账户配置 ${name}(${userid}) 登录到学生系统时出现错误`;
 
     logger.error(body);
 
-    if (!!bark_key) {
-      bark.send(bark_key, {
-        ...bark_global_template,
-        title: `自动健康申报 - 异常`,
-        body: `${body}\n原因: ${error}\n时间: ${time}`,
-      });
-    }
+    send(
+      `自动健康申报 - 异常`,
+      `${body}\n原因: ${error}\n时间: ${time}`,
+      notification
+    );
   },
 
   dayreport_active(
     name: string,
     userid: string,
-    bark_key: string,
+    notification: NotifierOption,
     CASTGC: string,
     error: string
   ) {
@@ -45,19 +48,17 @@ export const catch_exception = {
 
     logger.error(body);
 
-    if (!!bark_key) {
-      bark.send(bark_key, {
-        ...bark_global_template,
-        title: `自动健康申报 - 异常`,
-        body: `${body}\n原因: ${error}\n时间: ${time}`,
-      });
-    }
+    send(
+      `自动健康申报 - 异常`,
+      `${body}\n原因: ${error}\n时间: ${time}`,
+      notification
+    );
   },
 
   dayreport_getsave(
     name: string,
     userid: string,
-    bark_key: string,
+    notification: NotifierOption,
     CASTGC: string,
     error: string
   ) {
@@ -66,19 +67,17 @@ export const catch_exception = {
 
     logger.error(body);
 
-    if (!!bark_key) {
-      bark.send(bark_key, {
-        ...bark_global_template,
-        title: `自动健康申报 - 异常`,
-        body: `${body}\n原因: ${error}\n时间: ${time}`,
-      });
-    }
+    send(
+      `自动健康申报 - 异常`,
+      `${body}\n原因: ${error}\n时间: ${time}`,
+      notification
+    );
   },
 
   dayreport_repeat(
     name: string,
     userid: string,
-    bark_key: string,
+    notification: NotifierOption,
     CASTGC: string,
     undisturb: boolean
   ) {
@@ -86,20 +85,19 @@ export const catch_exception = {
     const body = `今日 ${name}(${userid}) 已经申报过了, 本次申报已跳过`;
 
     logger.warn(body);
-
-    if (!!bark_key && !undisturb) {
-      bark.send(bark_key, {
-        ...bark_global_template,
-        title: `自动健康申报 - 重复`,
-        body: `${body}\n时间: ${time}\nCASTGC_ID: ${CASTGC}`,
-      });
+    if (!undisturb) {
+      send(
+        `自动健康申报 - 重复`,
+        `${body}\n时间: ${time}\nCASTGC_ID: ${CASTGC}`,
+        notification
+      );
     }
   },
 
   dayreport_upload_success(
     name: string,
     userid: string,
-    bark_key: string,
+    notification: NotifierOption,
     CASTGC: string,
     username: string
   ) {
@@ -113,19 +111,17 @@ export const catch_exception = {
 
     logger.info(body);
 
-    if (!!bark_key) {
-      bark.send(bark_key, {
-        ...bark_global_template,
-        title: `自动健康申报 - 成功`,
-        body: `${body}\n申报人: ${nickname}\n申报时间: ${time}\nCASTGC_ID: ${CASTGC}`,
-      });
-    }
+    send(
+      `自动健康申报 - 成功`,
+      `${body}\n申报人: ${nickname}\n申报时间: ${time}\nCASTGC_ID: ${CASTGC}`,
+      notification
+    );
   },
 
   dayreport_upload(
     name: string,
     userid: string,
-    bark_key: string,
+    notification: NotifierOption,
     CASTGC: string,
     error: string
   ) {
@@ -134,12 +130,10 @@ export const catch_exception = {
 
     logger.error(body);
 
-    if (!!bark_key) {
-      bark.send(bark_key, {
-        ...bark_global_template,
-        title: `自动健康申报 - 异常`,
-        body: `${body}\n时间: ${time}\nCASTGC_ID: ${CASTGC}`,
-      });
-    }
+    send(
+      `自动健康申报 - 异常`,
+      `${body}\n时间: ${time}\nCASTGC_ID: ${CASTGC}`,
+      notification
+    );
   },
 };

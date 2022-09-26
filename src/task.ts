@@ -13,6 +13,7 @@ import config from "./config.json";
 import { catch_exception } from "./catch-exception";
 import { SZPTClient } from "./szpt";
 import { logger } from "./logger";
+import { NotifierOption } from "./notifier";
 
 logger.info(`任务分配账户数量: ${config.accounts.length}`);
 logger.info(`每日提交时间: ${config.day_report.upload_time}`);
@@ -29,14 +30,15 @@ const upload_task = async (is_auto = true) => {
     logger.info(`任务: ${account.name}(${account.userid})`);
 
     const client = new SZPTClient();
-    const bark_key = account.option.bark_key;
     const login_result = await client.login(account.userid, account.password);
+
+    const notification = account.notification as NotifierOption;
 
     if (login_result.type !== 0) {
       catch_exception.login(
         account.name,
         account.userid,
-        bark_key,
+        notification,
         login_result.error
       );
       continue;
@@ -50,7 +52,7 @@ const upload_task = async (is_auto = true) => {
       catch_exception.dayreport_active(
         account.name,
         account.userid,
-        bark_key,
+        notification,
         CASTGC,
         login_result.error
       );
@@ -61,7 +63,7 @@ const upload_task = async (is_auto = true) => {
       catch_exception.dayreport_getsave(
         account.name,
         account.userid,
-        bark_key,
+        notification,
         CASTGC,
         login_result.error
       );
@@ -72,9 +74,9 @@ const upload_task = async (is_auto = true) => {
       catch_exception.dayreport_repeat(
         account.name,
         account.userid,
-        bark_key,
+        notification,
         CASTGC,
-        !is_auto
+        is_auto
       );
       continue;
     }
@@ -99,7 +101,7 @@ const upload_task = async (is_auto = true) => {
       catch_exception.dayreport_upload_success(
         account.name,
         account.userid,
-        bark_key,
+        notification,
         CASTGC,
         upload_form.USER_NAME
       );
@@ -107,7 +109,7 @@ const upload_task = async (is_auto = true) => {
       catch_exception.dayreport_upload(
         account.name,
         account.userid,
-        bark_key,
+        notification,
         CASTGC,
         upload_result.error
       );
@@ -126,8 +128,7 @@ const upload_task = async (is_auto = true) => {
   }, upload_next_time - upload_current_time);
 
   logger.info(
-    `任务完成, 完成时间: ${dayjs().format("YYYY-MM-DD HH:mm:ss")}, 耗时: ${
-      (+dayjs() - start_time) / 1000
+    `任务完成, 完成时间: ${dayjs().format("YYYY-MM-DD HH:mm:ss")}, 耗时: ${(+dayjs() - start_time) / 1000
     }s`
   );
 
