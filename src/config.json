@@ -2,18 +2,39 @@
   "day_report": {
     "upload_time": "00:05:00"
   },
-  "bark_server": {
-    "host": "YOUR_BARK_SERVER_HOST",
-    "protocol": "http"
-  },
   "accounts": [
     {
       "name": "PROFILE_NAME",
       "userid": "YOUR_STUDENT_ID",
       "password": "YOUR_STUDENT_ACCOUNT_PASSWORD",
       "option": {
-        "bark_key": "YOUR_PHONE_BARK_KEY",
         "update_virus_check_time": true
+      },
+      "notification": {
+        "type": "pushplus",
+        "option": {
+          "token": "YOUR_TOKEN"
+        }
+      }
+    },
+    {
+      "name": "PROFILE_NAME",
+      "userid": "YOUR_STUDENT_ID",
+      "password": "YOUR_STUDENT_ACCOUNT_PASSWORD",
+      "option": {
+        "update_virus_check_time": true
+      },
+      "notification": {
+        "type": "bark",
+        "option": {
+          "token": "YOUR_DEVICE_KEY",
+          "host": "YOUR_BARK_SERVER_HOST",
+          "protocol": "http",
+          "extra": {
+            "icon": "https://s1.ax1x.com/2022/09/02/vIPkXd.png",
+            "group": "com.mitay.szptdayreport"
+          }
+        }
       }
     }
   ]
